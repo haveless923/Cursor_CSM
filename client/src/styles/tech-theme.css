@@ -1,0 +1,970 @@
+/* 科技风格主题 - 蓝色和紫色融合 - 精致版 */
+
+/* 全局布局优化 - 消除空白 */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+}
+
+/* 确保Layout填满视口 */
+.ant-layout {
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.ant-layout-content {
+  flex: 1 !important;
+  overflow: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 深色模式变量 */
+[data-theme="dark"] {
+  --primary-blue: #667eea;
+  --primary-purple: #764ba2;
+  --bg-primary: #0a0e27;
+  --bg-secondary: #1a1f3a;
+  --bg-tertiary: #0f1419;
+  --text-primary: #e0e7ff;
+  --text-secondary: #a0aec0;
+  --border-color: rgba(102, 126, 234, 0.3);
+  --card-bg: rgba(102, 126, 234, 0.1);
+  --input-bg: rgba(26, 31, 58, 0.5);
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+}
+
+/* 浅色模式变量 */
+[data-theme="light"] {
+  --primary-blue: #1890ff;
+  --primary-purple: #722ed1;
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #fafafa;
+  --text-primary: #262626;
+  --text-secondary: #595959;
+  --border-color: rgba(0, 0, 0, 0.06);
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+}
+
+/* 全局背景动画 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5),
+                0 0 40px rgba(118, 75, 162, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8),
+                0 0 60px rgba(118, 75, 162, 0.5);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* 科技风格卡片 - 精致化 */
+.tech-card,
+.ant-card {
+  border-radius: var(--border-radius-lg) !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-card-head {
+  padding: 12px 16px !important;
+  min-height: 48px !important;
+}
+
+.ant-card-head-title {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+}
+
+.ant-card-body {
+  padding: 16px !important;
+}
+
+.ant-card-actions {
+  padding: 8px 16px !important;
+}
+
+[data-theme="dark"] .tech-card {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.1) 0%, 
+    rgba(118, 75, 162, 0.1) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .tech-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4),
+              0 0 20px rgba(118, 75, 162, 0.3);
+  border-color: rgba(102, 126, 234, 0.6);
+}
+
+[data-theme="light"] .tech-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .tech-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-blue);
+}
+
+/* 科技风格按钮 - 正常尺寸 */
+.tech-button,
+.ant-btn {
+  border-radius: var(--border-radius-sm) !important;
+  transition: all 0.2s ease !important;
+  /* 保持正常尺寸，不强制缩小 */
+}
+
+[data-theme="dark"] .tech-button {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.2) 0%, 
+    rgba(118, 75, 162, 0.2) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tech-button:hover {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.4) 0%, 
+    rgba(118, 75, 162, 0.4) 100%);
+  border-color: rgba(102, 126, 234, 0.8);
+  color: #fff;
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="light"] .tech-button {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .tech-button:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  transform: translateX(3px);
+}
+
+.tech-button-primary {
+  border: none;
+  color: #fff;
+}
+
+[data-theme="dark"] .tech-button-primary {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+[data-theme="dark"] .tech-button-primary:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  transform: translateY(-2px);
+}
+
+[data-theme="light"] .tech-button-primary {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+}
+
+[data-theme="light"] .tech-button-primary:hover {
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* 统计卡片 */
+.stat-card {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .stat-card {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.15) 0%, 
+    rgba(118, 75, 162, 0.15) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+[data-theme="light"] .stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-blue);
+}
+
+/* 科技风格Header */
+.tech-header {
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .tech-header {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.2) 0%, 
+    rgba(118, 75, 162, 0.2) 100%);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="light"] .tech-header {
+  background: var(--card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 科技风格表格 */
+.tech-table {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .tech-table {
+  background: rgba(26, 31, 58, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .tech-table {
+  background: var(--card-bg);
+}
+
+.tech-table .ant-table {
+  background: transparent;
+}
+
+[data-theme="dark"] .tech-table .ant-table {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .tech-table .ant-table {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tech-table .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.2) 0%, 
+    rgba(118, 75, 162, 0.2) 100%);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+[data-theme="light"] .tech-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .tech-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .tech-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tech-table .ant-table-tbody > tr:hover > td {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+[data-theme="light"] .tech-table .ant-table-tbody > tr:hover > td {
+  background: #f5f5f5;
+}
+
+/* 输入框样式 - 完全无边框设计，强制覆盖 */
+.tech-input,
+.tech-input input,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-borderless,
+.ant-input-affix-wrapper-borderless,
+input.ant-input,
+.ant-input-affix-wrapper > input {
+  border: none !important;
+  border-radius: 0 !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 8px 0 !important;
+}
+
+[data-theme="light"] .ant-input,
+[data-theme="light"] .ant-input-affix-wrapper,
+[data-theme="light"] .ant-input-borderless,
+[data-theme="light"] .ant-input-affix-wrapper-borderless {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-input-borderless:hover,
+.ant-input-affix-wrapper-borderless:hover {
+  border-bottom-color: var(--primary-blue) !important;
+  box-shadow: none !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused,
+.ant-input-borderless:focus,
+.ant-input-affix-wrapper-borderless:focus {
+  border-bottom-color: var(--primary-blue) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 已移除旧的有边框样式，统一使用无边框设计 */
+
+/* Select 下拉框样式 - 无边框 */
+.ant-select-selector {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  padding: 8px 0 !important;
+}
+
+[data-theme="light"] .ant-select-selector {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-select:hover .ant-select-selector,
+.ant-select-focused .ant-select-selector {
+  border-bottom-color: var(--primary-blue) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+[data-theme="dark"] .ant-select-selector {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-select-selector {
+  background: var(--input-bg) !important;
+  border: 1px solid #d9d9d9 !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary-blue) !important;
+}
+
+[data-theme="dark"] .ant-select-focused .ant-select-selector {
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3) !important;
+}
+
+[data-theme="light"] .ant-select-focused .ant-select-selector {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .ant-select-dropdown {
+  background: rgba(26, 31, 58, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .ant-select-dropdown {
+  background: #fff !important;
+  border: 1px solid #d9d9d9;
+}
+
+[data-theme="dark"] .ant-select-item {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-select-item {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .ant-select-item:hover {
+  background: rgba(102, 126, 234, 0.2) !important;
+}
+
+[data-theme="light"] .ant-select-item:hover {
+  background: #f5f5f5 !important;
+}
+
+[data-theme="dark"] .ant-select-item-option-selected {
+  background: rgba(102, 126, 234, 0.3) !important;
+}
+
+[data-theme="light"] .ant-select-item-option-selected {
+  background: #e6f7ff !important;
+}
+
+/* DatePicker 样式 - 无边框 */
+.ant-picker {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  padding: 8px 0 !important;
+}
+
+[data-theme="light"] .ant-picker {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-picker:hover,
+.ant-picker-focused {
+  border-bottom-color: var(--primary-blue) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ant-picker-input > input {
+  color: var(--text-primary) !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .ant-picker {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-picker {
+  background: var(--input-bg) !important;
+  border: 1px solid #d9d9d9 !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-picker:hover,
+.ant-picker-focused {
+  border-color: var(--primary-blue) !important;
+}
+
+[data-theme="dark"] .ant-picker:hover,
+[data-theme="dark"] .ant-picker-focused {
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.25) !important;
+}
+
+[data-theme="light"] .ant-picker:hover,
+[data-theme="light"] .ant-picker-focused {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15) !important;
+}
+
+/* Modal 样式 - 精致化 */
+.ant-modal {
+  padding-bottom: 0 !important;
+}
+
+.ant-modal-content {
+  border-radius: var(--border-radius-lg) !important;
+}
+
+[data-theme="dark"] .ant-modal-content {
+  background: linear-gradient(135deg, 
+    rgba(26, 31, 58, 0.95) 0%, 
+    rgba(26, 31, 58, 0.95) 100%) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .ant-modal-content {
+  background: #fff !important;
+  border: 1px solid #d9d9d9;
+}
+
+.ant-modal-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px !important;
+}
+
+.ant-modal-title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] .ant-modal-title {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-modal-title {
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-body {
+  padding: 20px !important;
+  font-size: 13px !important;
+}
+
+[data-theme="dark"] .ant-modal-body {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .ant-modal-body {
+  color: var(--text-primary);
+}
+
+.ant-modal-footer {
+  padding: 12px 20px !important;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Form 标签样式 */
+.ant-form-item {
+  margin-bottom: 16px !important;
+}
+
+.ant-form-item-label > label {
+  height: auto !important;
+}
+
+[data-theme="dark"] .ant-form-item-label > label {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-form-item-label > label {
+  color: var(--text-primary) !important;
+}
+
+.ant-form-item-explain-error {
+  font-size: 12px !important;
+  margin-top: 4px !important;
+}
+
+/* Divider 标题与 Modal 内容左对齐（与添加客户按钮对齐） */
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  margin-bottom: 12px !important;
+}
+
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left .ant-divider-inner-text {
+  padding-left: 0 !important;
+}
+
+/* 去掉 Divider 前面的线条 */
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left::before {
+  display: none !important;
+}
+
+/* Divider 标题与 Form.Item 标签左对齐 */
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left .ant-divider-inner-text {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* 基本信息Divider的icon与Form.Item标签的*对齐 */
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left .ant-divider-inner-text {
+  padding-left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 确保Divider的icon和Form.Item的required *对齐 */
+.ant-modal-body .ant-form-item-required::before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+/* 调整Divider icon的位置以匹配Form.Item的*位置 */
+.ant-modal-body .ant-divider-horizontal.ant-divider-with-text-left .anticon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Form.Item 标签左对齐 */
+.ant-modal-body .ant-form-item-label {
+  padding-left: 0 !important;
+  text-align: left !important;
+}
+
+.ant-modal-body .ant-form-item-label > label {
+  padding-left: 0 !important;
+}
+
+/* 去掉复选框的边框 */
+.ant-checkbox-inner {
+  border: none !important;
+  background: transparent !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  border: none !important;
+}
+
+.ant-checkbox-inner::after {
+  border-color: var(--primary-blue) !important;
+}
+
+/* 复选框选中时的背景 */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background: transparent !important;
+}
+
+/* 单选框保留边框 */
+.ant-radio-inner {
+  border: 1px solid #d9d9d9 !important;
+  background: #fff !important;
+}
+
+[data-theme="dark"] .ant-radio-inner {
+  border: 1px solid rgba(102, 126, 234, 0.5) !important;
+  background: rgba(26, 31, 58, 0.5) !important;
+}
+
+.ant-radio-checked .ant-radio-inner {
+  border-color: var(--primary-blue) !important;
+}
+
+.ant-radio-inner::after {
+  background-color: var(--primary-blue) !important;
+}
+
+/* 统一Select下拉框的高度 */
+.ant-select-selector {
+  height: 32px !important;
+  line-height: 32px !important;
+  min-height: 32px !important;
+}
+
+.ant-select-selection-item,
+.ant-select-selection-placeholder {
+  line-height: 30px !important;
+}
+
+/* 单选和复选框自适应宽度 */
+.ant-radio-group {
+  width: auto !important;
+}
+
+.ant-radio-wrapper {
+  white-space: nowrap;
+}
+
+.ant-checkbox-wrapper {
+  white-space: nowrap;
+}
+
+/* 多选Select的标签样式修复 */
+.ant-select-multiple .ant-select-selector {
+  min-height: 32px !important;
+  padding: 2px 4px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+.ant-select-multiple .ant-select-selection-item {
+  height: 24px !important;
+  line-height: 22px !important;
+  margin: 2px 4px 2px 0 !important;
+  padding: 0 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 4px !important;
+}
+
+.ant-select-multiple .ant-select-selection-placeholder {
+  line-height: 28px !important;
+  padding-left: 4px !important;
+}
+
+/* 统一Select small尺寸的高度 */
+.ant-select-sm .ant-select-selector {
+  height: 24px !important;
+  line-height: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 统一Input small尺寸的高度和border-bottom位置 */
+.ant-input-sm,
+.ant-input-sm input {
+  height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 确保Input和Select的border-bottom在同一位置 */
+.ant-modal-body .ant-input-sm,
+.ant-modal-body .ant-input-sm input {
+  height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+  border-bottom-color: inherit !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-modal-body .ant-select-sm .ant-select-selector {
+  height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+  border-bottom-color: inherit !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-modal-body .ant-select-sm .ant-select-selection-item,
+.ant-modal-body .ant-select-sm .ant-select-selection-placeholder {
+  line-height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 确保联系人部分的Input和Select下划线对齐 */
+.ant-modal-body .ant-form-item .ant-input-sm,
+.ant-modal-body .ant-form-item .ant-input-sm input {
+  height: 24px !important;
+  min-height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  vertical-align: bottom !important;
+}
+
+.ant-modal-body .ant-form-item .ant-select-sm .ant-select-selector {
+  height: 24px !important;
+  min-height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  vertical-align: bottom !important;
+}
+
+/* 确保Form.Item底部对齐 */
+.ant-modal-body .ant-form-item[style*="marginBottom: 0"] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+.ant-modal-body .ant-form-item[style*="marginBottom: 0"] .ant-form-item-control {
+  width: 100% !important;
+  align-self: stretch !important;
+}
+
+/* 统一GOT Online详情中Input和Select的高度和下划线位置 */
+.ant-modal-body .ant-form-item {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.ant-modal-body .ant-form-item-control {
+  flex: 1 !important;
+}
+
+.ant-modal-body .ant-input,
+.ant-modal-body .ant-input-borderless,
+.ant-modal-body .ant-select .ant-select-selector,
+.ant-modal-body .ant-select-borderless .ant-select-selector {
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 8px 0 !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-modal-body .ant-select .ant-select-selector {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-modal-body .ant-select-selection-item,
+.ant-modal-body .ant-select-selection-placeholder {
+  line-height: 32px !important;
+}
+
+/* 统一DatePicker small尺寸的高度 */
+.ant-picker-sm {
+  height: 24px !important;
+}
+
+.ant-picker-sm .ant-picker-input > input {
+  height: 24px !important;
+  line-height: 24px !important;
+}
+
+.ant-select-sm .ant-select-selection-item,
+.ant-select-sm .ant-select-selection-placeholder {
+  line-height: 22px !important;
+}
+
+.ant-select-sm.ant-select-multiple .ant-select-selector {
+  min-height: 24px !important;
+  padding: 1px 2px !important;
+}
+
+.ant-select-sm.ant-select-multiple .ant-select-selection-item {
+  height: 20px !important;
+  line-height: 18px !important;
+  margin: 1px 2px 1px 0 !important;
+  padding: 0 6px !important;
+}
+
+/* Card 样式增强 */
+.ant-card {
+  background: transparent;
+}
+
+.ant-card-head {
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .ant-card-head-title {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .ant-card-head-title {
+  color: var(--text-primary) !important;
+}
+
+/* 浮动图标 */
+.tech-icon {
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
+}
+
+/* 渐变文字 */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+}
+
+/* 发光效果 */
+.glow-effect {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* 脉冲效果 */
+.pulse-effect {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* 去掉联系人画像文本框下方的横线 */
+.ant-modal-body .ant-input[type="textarea"],
+.ant-modal-body textarea.ant-input {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-body .ant-input[type="textarea"]:focus,
+.ant-modal-body textarea.ant-input:focus {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Select borderless style in modal */
+.ant-modal-body .ant-select-borderless .ant-select-selector {
+  border: none !important;
+  border-bottom: 1px solid #d9d9d9 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="dark"] .ant-modal-body .ant-select-borderless .ant-select-selector {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.ant-modal-body .ant-select-borderless .ant-select-selector:hover {
+  border: none !important;
+  border-bottom: 1px solid #1890ff !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-body .ant-select-borderless.ant-select-focused .ant-select-selector {
+  border: none !important;
+  border-bottom: 1px solid #1890ff !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-body .ant-select-borderless .ant-select-selector::after {
+  display: none !important;
+}
+

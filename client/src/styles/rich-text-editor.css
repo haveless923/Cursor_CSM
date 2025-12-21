@@ -1,0 +1,132 @@
+/* Rich Text Editor 样式 */
+.rich-text-editor-wrapper {
+  margin-bottom: 16px;
+}
+
+.rich-text-editor-wrapper .quill {
+  background: transparent;
+}
+
+.rich-text-editor-wrapper .ql-container {
+  font-size: 14px;
+  font-family: inherit;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.rich-text-editor-wrapper .ql-editor {
+  min-height: 120px;
+  padding: 12px 0;
+  color: inherit;
+}
+
+.rich-text-editor-wrapper .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.25);
+  font-style: normal;
+}
+
+.rich-text-editor-wrapper .ql-toolbar {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 8px 0;
+  background: transparent;
+}
+
+.rich-text-editor-wrapper .ql-toolbar .ql-stroke {
+  stroke: currentColor;
+}
+
+.rich-text-editor-wrapper .ql-toolbar .ql-fill {
+  fill: currentColor;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active {
+  color: #1890ff;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover .ql-stroke,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #1890ff;
+}
+
+.rich-text-editor-wrapper .ql-toolbar button:hover .ql-fill,
+.rich-text-editor-wrapper .ql-toolbar button.ql-active .ql-fill {
+  fill: #1890ff;
+}
+
+/* 深色主题 */
+.rich-text-editor-wrapper.dark-theme .ql-container {
+  border-bottom-color: rgba(102, 126, 234, 0.3);
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-editor {
+  color: var(--text-primary);
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-editor.ql-blank::before {
+  color: rgba(160, 174, 192, 0.5);
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-toolbar {
+  border-bottom-color: rgba(102, 126, 234, 0.3);
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button {
+  color: var(--text-secondary);
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button:hover,
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button.ql-active {
+  color: #667eea;
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button:hover .ql-stroke,
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #667eea;
+}
+
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button:hover .ql-fill,
+.rich-text-editor-wrapper.dark-theme .ql-toolbar button.ql-active .ql-fill {
+  fill: #667eea;
+}
+
+/* 浅色主题 */
+.rich-text-editor-wrapper.light-theme .ql-container {
+  border-bottom-color: #d9d9d9;
+}
+
+.rich-text-editor-wrapper.light-theme .ql-editor {
+  color: var(--text-primary);
+}
+
+.rich-text-editor-wrapper.light-theme .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.rich-text-editor-wrapper.light-theme .ql-toolbar {
+  border-bottom-color: #d9d9d9;
+}
+
+.rich-text-editor-wrapper.light-theme .ql-toolbar button {
+  color: #595959;
+}
+
+.rich-text-editor-wrapper.light-theme .ql-toolbar button:hover,
+.rich-text-editor-wrapper.light-theme .ql-toolbar button.ql-active {
+  color: #1890ff;
+}
+
+.rich-text-editor-wrapper.light-theme .ql-toolbar button:hover .ql-stroke,
+.rich-text-editor-wrapper.light-theme .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #1890ff;
+}
+
+.rich-text-editor-wrapper.light-theme .ql-toolbar button:hover .ql-fill,
+.rich-text-editor-wrapper.light-theme .ql-toolbar button.ql-active .ql-fill {
+  fill: #1890ff;
+}
+
+
