@@ -397,9 +397,28 @@ export async function loginWithSupabase(username: string, password: string) {
     
     if (queryError) {
       console.error('查询用户失败:', queryError);
-      // 如果是 RLS 错误，提示用户配置
-      if (queryError.code === 'PGRST301' || queryError.message?.includes('row-level security')) {
-        throw new Error('数据库权限配置错误，请联系管理员。错误：' + queryError.message);
+      // 如果是 RLS 错误（406 或 PGRST301），给出明确的修复提示
+      if (queryError.code === 'PGRST301' || 
+          queryError.code === 'PGRST116' ||
+          queryError.status === 406 ||
+          queryError.message?.includes('row-level security') ||
+          queryError.message?.includes('RLS')) {
+        const errorMsg = `
+❌ 数据库权限配置错误！
+
+请在 Supabase SQL Editor 中执行以下 SQL 来修复：
+
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+
+或者创建允许查询的策略：
+
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow login query" ON users FOR SELECT USING (true);
+
+详细说明请查看：快速修复登录问题.md
+        `.trim();
+        console.error(errorMsg);
+        throw new Error('数据库权限配置错误。请在 Supabase 中禁用 users 表的 RLS 或创建允许查询的策略。');
       }
       throw new Error('用户名或密码错误');
     }
