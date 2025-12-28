@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase 简单测试</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      width: 100%;
+      margin: 10px 0;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      min-height: 100px;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔌 Supabase 连接测试</h1>
+    <p><strong>URL:</strong> https://jpaurpkibrjwqthrcexc.supabase.co</p>
+    
+    <button onclick="testConnection()" id="testBtn1">测试连接</button>
+    <button onclick="testTable()" id="testBtn2">检查customers表</button>
+    
+    <script>
+      // 确保按钮事件绑定
+      document.getElementById('testBtn1').addEventListener('click', function(e) {
+        console.log('按钮1被点击');
+        testConnection();
+      });
+      
+      document.getElementById('testBtn2').addEventListener('click', function(e) {
+        console.log('按钮2被点击');
+        testTable();
+      });
+    </script>
+    
+    <div id="result" class="info">点击按钮开始测试...</div>
+  </div>
+
+  <script>
+    const supabaseUrl = 'https://jpaurpkibrjwqthrcexc.supabase.co';
+    const supabaseKey = 'sb_publishable_eJMFki07-yqFP8Hv2kdu9g_7lrSRdBB';
+    
+    let supabase = null;
+    const resultDiv = document.getElementById('result');
+    
+    function showResult(message, type = 'info') {
+      resultDiv.className = type;
+      resultDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+    }
+    
+    function initSupabase() {
+      try {
+        if (typeof window.supabase === 'undefined') {
+          showResult('❌ Supabase脚本未加载，请检查网络连接', 'error');
+          return false;
+        }
+        
+        if (!window.supabase.createClient) {
+          showResult('❌ Supabase.createClient不存在', 'error');
+          return false;
+        }
+        
+        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('Supabase客户端已创建:', supabase);
+        return true;
+      } catch (error) {
+        showResult(`❌ 初始化失败: ${error.message}`, 'error');
+        console.error('初始化错误:', error);
+        return false;
+      }
+    }
+    
+    async function testConnection() {
+      console.log('testConnection 函数被调用');
+      showResult('正在测试连接...', 'info');
+      
+      try {
+        // 初始化
+        if (!supabase) {
+          console.log('Supabase未初始化，尝试初始化...');
+          if (!initSupabase()) {
+            showResult('❌ Supabase初始化失败，请刷新页面重试', 'error');
+            return;
+          }
+        }
+        
+        console.log('Supabase客户端:', supabase);
+        showResult('正在查询customers表...', 'info');
+        
+        const { data, error } = await supabase
+          .from('customers')
+          .select('count')
+          .limit(1);
+        
+        console.log('查询结果:', { data, error });
+        
+        if (error) {
+          if (error.code === 'PGRST116') {
+            showResult('⚠️ 连接成功！但customers表不存在\n\n请先在Supabase Dashboard中创建表', 'info');
+          } else if (error.code === '42P01') {
+            showResult('⚠️ 连接成功！但customers表不存在\n\n请先在Supabase Dashboard中创建表', 'info');
+          } else {
+            showResult(`❌ 连接失败: ${error.message}\n错误代码: ${error.code}`, 'error');
+            console.error('完整错误:', error);
+          }
+        } else {
+          showResult('✅ 连接成功！\n\n可以正常访问Supabase数据库', 'success');
+        }
+      } catch (error) {
+        console.error('测试异常:', error);
+        showResult(`❌ 测试失败: ${error.message}\n\n请查看浏览器控制台获取详细信息`, 'error');
+      }
+    }
+    
+    async function testTable() {
+      showResult('正在检查customers表...', 'info');
+      
+      if (!supabase && !initSupabase()) {
+        return;
+      }
+      
+      try {
+        const { data, error, count } = await supabase
+          .from('customers')
+          .select('*', { count: 'exact' })
+          .limit(5);
+        
+        if (error) {
+          if (error.code === 'PGRST116' || error.code === '42P01') {
+            showResult('❌ customers表不存在\n\n请在Supabase Dashboard的SQL Editor中执行:\nsupabase_schema_simple.sql', 'error');
+          } else {
+            showResult(`❌ 查询失败: ${error.message}`, 'error');
+          }
+        } else {
+          showResult(`✅ customers表存在！\n\n当前有 ${count || 0} 条记录\n\n前5条记录:\n${JSON.stringify(data, null, 2)}`, 'success');
+        }
+      } catch (error) {
+        showResult(`❌ 检查失败: ${error.message}`, 'error');
+        console.error('检查错误:', error);
+      }
+    }
+    
+    // 页面加载时检查
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (initSupabase()) {
+          showResult('✅ Supabase已加载，可以开始测试', 'success');
+        } else {
+          showResult('⚠️ 等待Supabase脚本加载...', 'info');
+          setTimeout(() => {
+            if (initSupabase()) {
+              showResult('✅ Supabase已加载，可以开始测试', 'success');
+            } else {
+              showResult('❌ Supabase脚本加载失败\n\n可能的原因:\n1. 网络连接问题\n2. CDN被阻止\n3. 请通过HTTP服务器访问此页面', 'error');
+            }
+          }, 2000);
+        }
+      }, 500);
+    });
+    
+    // 全局错误处理
+    window.addEventListener('error', (e) => {
+      console.error('全局错误:', e.error);
+      if (e.error) {
+        showResult(`❌ JavaScript错误: ${e.error.message}`, 'error');
+      }
+    });
+    
+    // 确保按钮事件绑定（页面加载完成后）
+    window.addEventListener('load', () => {
+      console.log('页面加载完成，绑定按钮事件');
+      
+      const btn1 = document.getElementById('testBtn1');
+      const btn2 = document.getElementById('testBtn2');
+      
+      if (btn1) {
+        btn1.addEventListener('click', function(e) {
+          console.log('测试连接按钮被点击');
+          e.preventDefault();
+          testConnection();
+        });
+        console.log('按钮1事件已绑定');
+      } else {
+        console.error('找不到按钮1');
+      }
+      
+      if (btn2) {
+        btn2.addEventListener('click', function(e) {
+          console.log('检查表按钮被点击');
+          e.preventDefault();
+          testTable();
+        });
+        console.log('按钮2事件已绑定');
+      } else {
+        console.error('找不到按钮2');
+      }
+    });
+  </script>
+</body>
+</html>
+
