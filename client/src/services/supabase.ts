@@ -387,44 +387,38 @@ export async function loginWithSupabase(username: string, password: string) {
     // 如果 RPC 不存在，尝试直接查询（需要禁用 RLS 或配置允许查询的策略）
     console.warn('RPC 函数不存在或失败，尝试直接查询用户表');
     
-    // 使用 service_role key 创建临时客户端来绕过 RLS
-    // 注意：这需要在前端配置，但为了安全，应该使用 RPC 函数
+    // 使用 maybeSingle() 而不是 single()，避免 0 行时报错
     const { data: users, error: queryError } = await supabase
       .from('users')
-      .select('id, username, role, password')
+      .select('id, username, role')
       .eq('username', username)
-      .single();
+      .maybeSingle(); // 使用 maybeSingle 避免 PGRST116 错误
     
     if (queryError) {
       console.error('查询用户失败:', queryError);
       // 如果是 RLS 错误（406 或 PGRST301），给出明确的修复提示
       if (queryError.code === 'PGRST301' || 
-          queryError.code === 'PGRST116' ||
           queryError.status === 406 ||
           queryError.message?.includes('row-level security') ||
           queryError.message?.includes('RLS')) {
-        const errorMsg = `
-❌ 数据库权限配置错误！
-
-请在 Supabase SQL Editor 中执行以下 SQL 来修复：
-
-ALTER TABLE users DISABLE ROW LEVEL SECURITY;
-
-或者创建允许查询的策略：
-
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow login query" ON users FOR SELECT USING (true);
-
-详细说明请查看：快速修复登录问题.md
-        `.trim();
-        console.error(errorMsg);
-        throw new Error('数据库权限配置错误。请在 Supabase 中禁用 users 表的 RLS 或创建允许查询的策略。');
+        throw new Error('数据库权限配置错误。请确保已执行：ALTER TABLE users DISABLE ROW LEVEL SECURITY;');
       }
-      throw new Error('用户名或密码错误');
+      throw new Error('查询用户时发生错误：' + (queryError.message || queryError.code));
     }
     
     if (!users) {
-      throw new Error('用户名或密码错误');
+      // 检查表中是否有任何用户数据
+      const { data: allUsers } = await supabase
+        .from('users')
+        .select('username')
+        .limit(5);
+      
+      if (!allUsers || allUsers.length === 0) {
+        throw new Error('用户表中没有数据。请在 Supabase SQL Editor 中执行 创建测试用户.sql 来创建用户。');
+      } else {
+        const usernames = allUsers.map(u => u.username).join(', ');
+        throw new Error(`用户名 "${username}" 不存在。可用的用户名：${usernames}`);
+      }
     }
     
     // 注意：这里不验证密码，因为前端无法安全地验证 bcrypt 密码
