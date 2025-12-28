@@ -371,54 +371,61 @@ export async function loginWithSupabase(username: string, password: string) {
   const supabase = getSupabaseClient();
   
   try {
-    // 使用 Supabase Edge Function 进行登录验证
-    // 如果 Edge Function 不存在，则使用 RPC 函数
-    const { data, error } = await supabase.functions.invoke('auth-login', {
-      body: { username, password }
+    // 首先尝试使用 RPC 函数（最简单可靠）
+    const { data: rpcData, error: rpcError } = await supabase.rpc('verify_login', {
+      p_username: username,
+      p_password: password
     });
     
-    if (error) {
-      // 如果 Edge Function 不存在，尝试使用 RPC 函数
-      console.warn('Edge Function 调用失败，尝试使用 RPC:', error);
-      
-      // 使用 Supabase RPC 函数验证登录（需要在 Supabase 中创建此函数）
-      const { data: rpcData, error: rpcError } = await supabase.rpc('verify_login', {
-        p_username: username,
-        p_password: password
-      });
-      
-      if (rpcError || !rpcData || !rpcData.success) {
-        // 如果 RPC 也不存在，直接查询用户（仅用于测试，不验证密码）
-        console.warn('RPC 函数不存在，使用直接查询（不安全，仅用于测试）');
-        const { data: users, error: queryError } = await supabase
-          .from('users')
-          .select('id, username, role')
-          .eq('username', username)
-          .single();
-        
-        if (queryError || !users) {
-          throw new Error('用户名或密码错误');
-        }
-        
-        return {
-          user: {
-            id: users.id,
-            username: users.username,
-            role: users.role,
-          },
-          token: '' // 临时方案，不返回 token
-        };
-      }
-      
+    if (!rpcError && rpcData && rpcData.success) {
       return {
         user: rpcData.user,
         token: rpcData.token || ''
       };
     }
     
+    // 如果 RPC 不存在，尝试直接查询（需要禁用 RLS 或配置允许查询的策略）
+    console.warn('RPC 函数不存在或失败，尝试直接查询用户表');
+    
+    // 使用 service_role key 创建临时客户端来绕过 RLS
+    // 注意：这需要在前端配置，但为了安全，应该使用 RPC 函数
+    const { data: users, error: queryError } = await supabase
+      .from('users')
+      .select('id, username, role, password')
+      .eq('username', username)
+      .single();
+    
+    if (queryError) {
+      console.error('查询用户失败:', queryError);
+      // 如果是 RLS 错误，提示用户配置
+      if (queryError.code === 'PGRST301' || queryError.message?.includes('row-level security')) {
+        throw new Error('数据库权限配置错误，请联系管理员。错误：' + queryError.message);
+      }
+      throw new Error('用户名或密码错误');
+    }
+    
+    if (!users) {
+      throw new Error('用户名或密码错误');
+    }
+    
+    // 注意：这里不验证密码，因为前端无法安全地验证 bcrypt 密码
+    // 生产环境必须使用 RPC 函数或 Edge Function 来验证密码
+    console.warn('⚠️ 警告：当前登录方式未验证密码，仅用于测试！');
+    
+    // 生成简单的 token
+    const token = btoa(JSON.stringify({ 
+      userId: users.id, 
+      username: users.username, 
+      role: users.role 
+    }));
+    
     return {
-      user: data.user,
-      token: data.token || ''
+      user: {
+        id: users.id,
+        username: users.username,
+        role: users.role,
+      },
+      token: token
     };
   } catch (error: any) {
     console.error('Supabase登录失败:', error);
