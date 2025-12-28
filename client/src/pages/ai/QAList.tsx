@@ -66,7 +66,7 @@ export default function QAList() {
     setLoading(true);
     try {
       // TODO: 调用API获取QA列表
-      setQAList([]);
+      setQaList([]);
     } catch (error) {
       message.error('加载数据失败');
     } finally {

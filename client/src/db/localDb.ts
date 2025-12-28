@@ -31,6 +31,7 @@ export interface Customer {
   owner_id?: number;
   project_link?: string;
   notes?: string;
+  last_test_date?: string;
   created_by?: number;
   created_at?: string;
   updated_at?: string;
