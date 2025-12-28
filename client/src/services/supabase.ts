@@ -371,39 +371,58 @@ export async function loginWithSupabase(username: string, password: string) {
   const supabase = getSupabaseClient();
   
   try {
-    // 如果使用Supabase Auth，可以这样登录
-    // const { data, error } = await supabase.auth.signInWithPassword({
-    //   email: username,
-    //   password: password,
-    // });
+    // 使用 Supabase Edge Function 进行登录验证
+    // 如果 Edge Function 不存在，则使用 RPC 函数
+    const { data, error } = await supabase.functions.invoke('auth-login', {
+      body: { username, password }
+    });
     
-    // 如果使用自定义用户表，需要先查询用户
-    const { data: users, error: queryError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single();
-    
-    if (queryError || !users) {
-      throw new Error('用户名或密码错误');
+    if (error) {
+      // 如果 Edge Function 不存在，尝试使用 RPC 函数
+      console.warn('Edge Function 调用失败，尝试使用 RPC:', error);
+      
+      // 使用 Supabase RPC 函数验证登录（需要在 Supabase 中创建此函数）
+      const { data: rpcData, error: rpcError } = await supabase.rpc('verify_login', {
+        p_username: username,
+        p_password: password
+      });
+      
+      if (rpcError || !rpcData || !rpcData.success) {
+        // 如果 RPC 也不存在，直接查询用户（仅用于测试，不验证密码）
+        console.warn('RPC 函数不存在，使用直接查询（不安全，仅用于测试）');
+        const { data: users, error: queryError } = await supabase
+          .from('users')
+          .select('id, username, role')
+          .eq('username', username)
+          .single();
+        
+        if (queryError || !users) {
+          throw new Error('用户名或密码错误');
+        }
+        
+        return {
+          user: {
+            id: users.id,
+            username: users.username,
+            role: users.role,
+          },
+          token: '' // 临时方案，不返回 token
+        };
+      }
+      
+      return {
+        user: rpcData.user,
+        token: rpcData.token || ''
+      };
     }
     
-    // 注意：实际应用中密码应该加密存储和验证
-    // 这里需要根据您的实际认证方式调整
-    // 如果使用Supabase Auth，应该使用supabase.auth.signInWithPassword
-    
     return {
-      user: {
-        id: users.id,
-        username: users.username,
-        role: users.role,
-      },
-      // 如果需要token，可以使用Supabase的session
-      // token: data.session?.access_token
+      user: data.user,
+      token: data.token || ''
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Supabase登录失败:', error);
-    throw error;
+    throw new Error(error.message || '登录失败，请检查用户名和密码');
   }
 }
 

@@ -1,4 +1,4 @@
-import api from './api';
+import { loginWithSupabase } from './supabase';
 
 export interface User {
   id: number;
@@ -8,21 +8,23 @@ export interface User {
 
 export async function login(username: string, password: string) {
   try {
-    const response = await api.post('/auth/login', { username, password });
-    const { token, user } = response.data;
+    // 使用 Supabase 进行登录
+    const result = await loginWithSupabase(username, password);
     
-    if (!token || !user) {
-      throw new Error('服务器返回数据格式错误');
+    if (!result.user) {
+      throw new Error('登录失败，未返回用户信息');
     }
     
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    // 保存用户信息到 localStorage
+    localStorage.setItem('user', JSON.stringify(result.user));
+    // 如果有 token，也保存
+    if (result.token) {
+      localStorage.setItem('token', result.token);
+    }
     
-    return { token, user };
+    return { token: result.token || '', user: result.user };
   } catch (error: any) {
-    console.error('登录API调用失败:', error);
-    console.error('请求URL:', error.config?.url);
-    console.error('Base URL:', api.defaults.baseURL);
+    console.error('登录失败:', error);
     throw error;
   }
 }
