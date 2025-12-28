@@ -44,12 +44,9 @@ export function isAuthenticated(): boolean {
 }
 
 export async function getCurrentUserInfo(): Promise<User | null> {
-  try {
-    const response = await api.get('/auth/me');
-    return response.data.user;
-  } catch (error) {
-    return null;
-  }
+  // 直接从 localStorage 获取用户信息
+  // 如果需要从服务器验证，可以使用 Supabase
+  return getCurrentUser();
 }
 
 
