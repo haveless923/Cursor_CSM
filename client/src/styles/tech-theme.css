@@ -948,6 +948,20 @@ input.ant-input,
   border-radius: 0 !important;
 }
 
+/* 分页器样式优化 */
+.tech-table .ant-pagination {
+  margin: 16px 0 !important;
+  padding: 0 !important;
+}
+
+.tech-table .ant-pagination .ant-pagination-options {
+  margin-left: 16px !important;
+}
+
+.tech-table .ant-pagination .ant-pagination-total-text {
+  margin-right: 16px !important;
+}
+
 [data-theme="dark"] .ant-modal-body .ant-select-borderless .ant-select-selector {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
 }

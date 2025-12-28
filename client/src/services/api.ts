@@ -68,12 +68,20 @@ api.interceptors.response.use(
       console.error('Base URL:', API_BASE_URL);
     }
     
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // 只在非登录页面才跳转
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+    // 处理401未授权或403禁止访问（可能是token过期）
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      const errorMessage = error.response?.data?.error || '';
+      // 如果是token相关错误，清除本地存储并跳转登录
+      if (errorMessage.includes('令牌') || errorMessage.includes('token') || 
+          errorMessage.includes('未授权') || errorMessage.includes('过期') ||
+          error.response?.status === 403) {
+        console.warn('Token已过期或无效，清除本地存储并跳转登录页');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // 只在非登录页面才跳转
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);

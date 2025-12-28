@@ -43,18 +43,35 @@ router.get('/', async (req: AuthRequest, res) => {
       return res.status(401).json({ error: '用户ID无效' });
     }
     
-    let query = 'SELECT * FROM customers WHERE owner_id = ?';
-    const params: any[] = [userId]; // 只查询当前用户负责的客户
+    // admin用户可以看到所有客户，普通用户只能看到自己负责的客户
+    const isAdmin = req.userRole === 'admin';
+    console.log('获取客户列表 - userRole:', req.userRole, 'isAdmin:', isAdmin);
+    let query = 'SELECT * FROM customers';
+    const params: any[] = [];
+    const conditions: string[] = [];
 
+    // 如果不是admin，添加owner_id条件
+    if (!isAdmin) {
+      conditions.push('owner_id = ?');
+      params.push(userId);
+    }
+
+    // 添加category条件
     if (category) {
-      query += ' AND category = ?';
+      conditions.push('category = ?');
       params.push(category);
     }
 
+    // 添加search条件
     if (search) {
-      query += ' AND (customer_name LIKE ? OR company_name LIKE ? OR contact_person LIKE ? OR name LIKE ?)';
+      conditions.push('(customer_name LIKE ? OR company_name LIKE ? OR contact_person LIKE ? OR name LIKE ?)');
       const searchTerm = `%${search}%`;
       params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    }
+
+    // 组合WHERE子句
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
     }
 
     query += ' ORDER BY updated_at DESC';

@@ -11,6 +11,7 @@ import QAList from './pages/ai/QAList';
 import ReportList from './pages/ai/ReportList';
 import RequirementList from './pages/ai/RequirementList';
 import OpportunityMining from './pages/ai/OpportunityMining';
+import IndustryIntelligence from './pages/ai/IndustryIntelligence';
 import { isAuthenticated } from './services/auth';
 import { startAutoSync } from './services/sync';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -27,9 +28,10 @@ function AppContent() {
   const { theme } = useTheme();
 
   useEffect(() => {
-    // 启动自动同步
+    // 启动自动同步（现在同步到Supabase，而不是后端API）
     if (isAuthenticated()) {
-      const cleanup = startAutoSync(30000); // 每30秒同步一次
+      // 增加同步间隔到60秒，减少请求频率
+      const cleanup = startAutoSync(60000); // 每60秒同步一次
 
       return () => {
         if (cleanup) cleanup();
@@ -73,6 +75,7 @@ function AppContent() {
           <Route path="/ai/report" element={<PrivateRoute><ReportList /></PrivateRoute>} />
           <Route path="/ai/requirement" element={<PrivateRoute><RequirementList /></PrivateRoute>} />
           <Route path="/ai/opportunity" element={<PrivateRoute><OpportunityMining /></PrivateRoute>} />
+          <Route path="/ai/intelligence" element={<PrivateRoute><IndustryIntelligence /></PrivateRoute>} />
           <Route
             path="/*"
             element={<Navigate to="/" replace />}

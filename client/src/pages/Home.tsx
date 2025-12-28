@@ -58,7 +58,8 @@ export default function Home() {
         { key: 'qa', name: '客户QA', icon: <UserAddOutlined />, path: '/ai/qa' },
         { key: 'report', name: '周报生成', icon: <ClockCircleOutlined />, path: '/ai/report' },
         { key: 'visit', name: '拜访行程', icon: <ClockCircleOutlined />, path: '/sales/visit' },
-        { key: 'opportunity', name: '机会挖掘', icon: <ThunderboltOutlined />, path: '/ai/opportunity' }
+        { key: 'opportunity', name: '机会挖掘', icon: <ThunderboltOutlined />, path: '/ai/opportunity' },
+        { key: 'intelligence', name: '行业情报', icon: <FileTextOutlined />, path: '/ai/intelligence' }
       ]
     },
     {
@@ -91,14 +92,26 @@ export default function Home() {
 
   const loadStats = async () => {
     try {
-      const customers = await getCustomers();
+      // 获取所有客户（不筛选category）
+      const allCustomers = await getCustomers();
+      
+      // 获取结单客户（使用与成交客户页面相同的筛选逻辑）
+      const closedCustomers = await getCustomers({ category: '结单' });
+      
+      console.log('统计 - 所有客户数:', allCustomers.length);
+      console.log('统计 - 结单客户数:', closedCustomers.length);
+      console.log('统计 - 所有客户的category分布:', 
+        allCustomers.reduce((acc: any, c: any) => {
+          acc[c.category || '未设置'] = (acc[c.category || '未设置'] || 0) + 1;
+          return acc;
+        }, {})
+      );
       
       // 计算总客户数（结单客户数量）
-      const closedCustomers = customers.filter((c: any) => c.category === '结单');
       const totalCustomers = closedCustomers.length;
       
       // 计算待跟进（潜在机会：试用/谈判/高意向 + 建联中 + 静默）
-      const pendingFollowUp = customers.filter((c: any) => 
+      const pendingFollowUp = allCustomers.filter((c: any) => 
         c.category === '试用/谈判/高意向' || 
         c.category === '建联中' || 
         c.category === '静默'
@@ -112,6 +125,13 @@ export default function Home() {
         const createdDate = dayjs(c.created_at);
         return createdDate.isAfter(startOfMonth) || createdDate.isSame(startOfMonth, 'day');
       }).length;
+      
+      console.log('统计结果:', {
+        totalCustomers,
+        pendingFollowUp,
+        monthlyNew,
+        closedCount: totalCustomers
+      });
       
       setStats({
         totalCustomers,

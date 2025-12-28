@@ -67,7 +67,7 @@ export default function Login() {
               textAlign: 'center', 
               margin: 0, 
               fontSize: 24,
-              color: theme === 'light' ? '#fff' : undefined
+              color: theme === 'light' ? '#333' : undefined
             }}
           >
             CSM 客户成功管理系统
@@ -80,7 +80,8 @@ export default function Login() {
           borderRadius: 16,
           boxShadow: theme === 'dark' 
             ? '0 20px 60px rgba(102, 126, 234, 0.4)' 
-            : '0 10px 40px rgba(0, 0, 0, 0.2)'
+            : '0 10px 40px rgba(0, 0, 0, 0.2)',
+          background: theme === 'light' ? '#fff' : undefined
         }}
         styles={{ body: { padding: '32px' } }}
       >
@@ -129,20 +130,21 @@ export default function Login() {
 
         <div style={{ 
           marginTop: 24, 
-          fontSize: 12, 
-          color: theme === 'dark' ? '#a0aec0' : 'rgba(255, 255, 255, 0.8)', 
+          fontSize: 13, 
+          color: theme === 'dark' ? '#a0aec0' : '#595959', 
           textAlign: 'center', 
           lineHeight: 1.8 
         }}>
           <p style={{ 
             marginBottom: 8, 
             fontWeight: 600, 
-            color: theme === 'dark' ? '#e0e7ff' : '#fff' 
+            color: theme === 'dark' ? '#e0e7ff' : '#262626',
+            fontSize: 13
           }}>
             默认账号：
           </p>
-          <p style={{ margin: 4 }}>管理员：admin / admin123</p>
-          <p style={{ margin: 4 }}>成员：member1 / member1123 (member1-5)</p>
+          <p style={{ margin: 4, color: theme === 'dark' ? '#a0aec0' : '#595959', fontSize: 13 }}>管理员：admin / admin123</p>
+          <p style={{ margin: 4, color: theme === 'dark' ? '#a0aec0' : '#595959', fontSize: 13 }}>成员：member1 / member1123 (member1-5)</p>
         </div>
       </Card>
     </div>

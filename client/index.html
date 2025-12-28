@@ -5,12 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CSM 客户成功管理系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // 只加载Supabase库，不创建全局变量，避免重复声明错误
+      // 客户端实例将通过 getSupabaseClient() 函数创建
+      if (typeof window.supabase === 'undefined') {
+        console.warn('Supabase库未正确加载');
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+
 
 
 

@@ -18,13 +18,24 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
 
   jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
     if (err) {
-      console.error('JWT验证失败:', err.message);
-      return res.status(403).json({ error: '令牌无效或已过期' });
+      // 只在开发环境或特定情况下才详细记录过期错误
+      if (err.name === 'TokenExpiredError') {
+        console.warn('JWT token已过期:', err.expiredAt);
+        return res.status(403).json({ error: '令牌已过期，请重新登录' });
+      } else if (err.name === 'JsonWebTokenError') {
+        console.error('JWT token格式错误:', err.message);
+        return res.status(403).json({ error: '令牌无效，请重新登录' });
+      } else {
+        console.error('JWT验证失败:', err.message);
+        return res.status(403).json({ error: '令牌验证失败，请重新登录' });
+      }
     }
-    console.log('JWT验证成功 - decoded:', decoded);
+    // 只在开发环境记录成功日志
+    if (process.env.NODE_ENV === 'development') {
+      console.log('JWT验证成功 - userId:', decoded.userId);
+    }
     req.userId = decoded.userId;
     req.userRole = decoded.role;
-    console.log('设置 req.userId:', req.userId, 'req.userRole:', req.userRole);
     next();
   });
 }

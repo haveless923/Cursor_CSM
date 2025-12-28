@@ -196,6 +196,21 @@ export async function initDatabase() {
   } catch (e) {
     // 字段已存在，忽略错误
   }
+  try {
+    await dbRun(`ALTER TABLE customers ADD COLUMN city TEXT`);
+  } catch (e) {
+    // 字段已存在，忽略错误
+  }
+  try {
+    await dbRun(`ALTER TABLE customers ADD COLUMN category TEXT DEFAULT '公海'`);
+  } catch (e) {
+    // 字段已存在，忽略错误
+  }
+  try {
+    await dbRun(`ALTER TABLE customers ADD COLUMN status TEXT DEFAULT '公海'`);
+  } catch (e) {
+    // 字段已存在，忽略错误
+  }
 
   // 销售机会表
   await dbRun(`
@@ -303,6 +318,46 @@ export async function initDatabase() {
         [`member${i}`, hashedPassword, 'member']
       );
     }
+  }
+
+  // 行业新闻表
+  await dbRun(`
+    CREATE TABLE IF NOT EXISTS industry_news (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      content TEXT,
+      url TEXT NOT NULL UNIQUE,
+      source TEXT NOT NULL,
+      publish_date TEXT,
+      summary TEXT,
+      keywords TEXT,
+      relevance_score REAL DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // 新闻收藏表
+  await dbRun(`
+    CREATE TABLE IF NOT EXISTS news_favorites (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      news_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (news_id) REFERENCES industry_news(id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      UNIQUE(news_id, user_id)
+    )
+  `);
+
+  // 创建索引以提高查询性能
+  try {
+    await dbRun(`CREATE INDEX IF NOT EXISTS idx_news_source ON industry_news(source)`);
+    await dbRun(`CREATE INDEX IF NOT EXISTS idx_news_relevance ON industry_news(relevance_score DESC)`);
+    await dbRun(`CREATE INDEX IF NOT EXISTS idx_news_date ON industry_news(publish_date DESC)`);
+    await dbRun(`CREATE INDEX IF NOT EXISTS idx_favorites_user ON news_favorites(user_id)`);
+  } catch (e) {
+    // 索引已存在，忽略错误
   }
 
   console.log('数据库初始化完成');
