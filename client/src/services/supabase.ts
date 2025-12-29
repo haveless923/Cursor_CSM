@@ -396,14 +396,23 @@ export async function loginWithSupabase(username: string, password: string) {
     
     if (queryError) {
       console.error('查询用户失败:', queryError);
+      console.error('错误详情:', {
+        code: queryError.code,
+        status: queryError.status,
+        message: queryError.message,
+        details: queryError.details,
+        hint: queryError.hint
+      });
+      
       // 如果是 RLS 错误（406 或 PGRST301），给出明确的修复提示
       if (queryError.code === 'PGRST301' || 
           queryError.status === 406 ||
           queryError.message?.includes('row-level security') ||
-          queryError.message?.includes('RLS')) {
-        throw new Error('数据库权限配置错误。请确保已执行：ALTER TABLE users DISABLE ROW LEVEL SECURITY;');
+          queryError.message?.includes('RLS') ||
+          queryError.message?.includes('permission denied')) {
+        throw new Error('数据库权限配置错误。请执行以下 SQL：\n1. ALTER TABLE users DISABLE ROW LEVEL SECURITY;\n2. 然后执行 创建测试用户.sql 创建用户');
       }
-      throw new Error('查询用户时发生错误：' + (queryError.message || queryError.code));
+      throw new Error('查询用户时发生错误：' + (queryError.message || queryError.code || '未知错误'));
     }
     
     if (!users) {
